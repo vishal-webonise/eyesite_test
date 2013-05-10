@@ -7,8 +7,8 @@ class ProcessorController < ApplicationController
       eObj = {}
       eObj[:scoreStart] = rpt[:scoreEnd]
       session[:regimenStart] = rpt[:scoreStart] unless session[:regimenStart].present?
-      drillNames = ["eyeRoute", "eyeMotion", "eyeTrack", "eyeFocus", "eyeSpeed", "eyeRecall", "eyeMemory"]
-      drills = [50874, 51042, 50875, 50876, 50877, 50878, 50879]
+      drillNames = ["eyeMotion", "eyeRoute", "eyeTrack", "eyeFocus", "eyeSpeed", "eyeRecall", "eyeMemory"]
+      drills = [51042, 50874, 50875, 50876, 50877, 50878, 50879]
       drillid = params[:drillid].to_i
       for x in 0...drills.size
         break if drillid == drills[x]
@@ -33,7 +33,7 @@ class ProcessorController < ApplicationController
           eObj[:drillName] = drillNames[x]
         else
           eStr+="I'm taking a life.. better try this level over.<br/>Click 'CONTINUE' or press the spacebar to redo this level.</font>"
-          eObj[:lives] = rpt[:lives] - 1
+          eObj[:lives] = rpt[:lives].to_i - 1
         end
         eObj[:scoreStart] = rpt[:scoreStart]
       else
@@ -57,7 +57,7 @@ class ProcessorController < ApplicationController
                 # + "\n(level=#{rpt[:level]})"
       else
         eObj[:scoreStart] = rpt[:scoreEnd]
-        if rpt[:level.to_i == 9]
+        if rpt[:level].to_i == 9
           eStr+="\nCongratulations.\n\n"+
                 "You have finished the Vision Gain regimen at the hightest level.\n"+
                 "Your final score is <b>#{rpt[:scoreEnd]}</b>\n."+
@@ -79,7 +79,7 @@ class ProcessorController < ApplicationController
         logger.info { " #{item}" }
         eStr += "#{item[0].to_s}=#{item[1]}&"
       end
-      logger.info { "FINAL: #{eStr}" }
+      logger.info { "\nFINAL: #{eStr}" }
       respond_to do |format|
         format.all { render text: eStr }
       end
